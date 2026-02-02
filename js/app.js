@@ -204,13 +204,22 @@ const QZHApp = (function() {
         // Set filename
         filenameEl.textContent = filename;
         
-        // Render metadata
+        // Render metadata and registers in sidebar
+        let sidebarHtml = '';
+        
         if (result.metadata) {
-            metadataEl.innerHTML = renderMetadata(result.metadata);
-            setupMetadataCollapse();
+            sidebarHtml += renderMetadata(result.metadata);
         } else {
-            metadataEl.innerHTML = '<p class="no-metadata">Keine Metadaten vorhanden</p>';
+            sidebarHtml += '<p class="no-metadata">Keine Metadaten vorhanden</p>';
         }
+        
+        // Render registers
+        if (result.registers) {
+            sidebarHtml += renderRegisters(result.registers);
+        }
+        
+        metadataEl.innerHTML = sidebarHtml;
+        setupMetadataCollapse();
         
         // Render heading
         if (result.heading) {
@@ -239,6 +248,43 @@ const QZHApp = (function() {
         if (result.footnotes && result.footnotes.length > 0) {
             renderFootnotes(result.footnotes);
         }
+    }
+    
+    /**
+     * Render registers (places, persons, keywords)
+     */
+    function renderRegisters(registers) {
+        let html = '';
+        
+        // Places
+        if (registers.places && registers.places.length > 0) {
+            html += `
+                <div class="metadata-section register-section">
+                    <h4>Ort</h4>
+                    <div class="metadata-content">
+                        <ul class="register-list">
+                            ${registers.places.map(p => `<li class="register-item place">${escapeHTML(p.name)}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Persons
+        if (registers.persons && registers.persons.length > 0) {
+            html += `
+                <div class="metadata-section register-section">
+                    <h4>Person</h4>
+                    <div class="metadata-content">
+                        <ul class="register-list">
+                            ${registers.persons.map(p => `<li class="register-item person">${escapeHTML(p.name)}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+        
+        return html;
     }
 
     /**

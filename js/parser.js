@@ -13,6 +13,12 @@ const QZHParser = (function() {
     // Footnote counter
     let footnoteCounter = 0;
     let footnotes = [];
+    
+    // Registers for entities
+    let persons = [];
+    let places = [];
+    let organizations = [];
+    let terms = [];
 
     /**
      * Parse XML string to DOM
@@ -34,16 +40,26 @@ const QZHParser = (function() {
      * Main transform function
      */
     function transform(xmlDoc) {
-        // Reset footnotes
+        // Reset footnotes and registers
         footnoteCounter = 0;
         footnotes = [];
+        persons = [];
+        places = [];
+        organizations = [];
+        terms = [];
         
         const result = {
             metadata: extractMetadata(xmlDoc),
             heading: extractHeading(xmlDoc),
             body: null,
             back: null,
-            footnotes: []
+            footnotes: [],
+            registers: {
+                persons: [],
+                places: [],
+                organizations: [],
+                terms: []
+            }
         };
         
         // Transform body
@@ -60,7 +76,27 @@ const QZHParser = (function() {
         
         result.footnotes = footnotes;
         
+        // Deduplicate and sort registers
+        result.registers.persons = deduplicateEntities(persons);
+        result.registers.places = deduplicateEntities(places);
+        result.registers.organizations = deduplicateEntities(organizations);
+        result.registers.terms = deduplicateEntities(terms);
+        
         return result;
+    }
+    
+    /**
+     * Deduplicate entities by ref or name
+     */
+    function deduplicateEntities(entities) {
+        const seen = new Map();
+        for (const entity of entities) {
+            const key = entity.ref || entity.name;
+            if (!seen.has(key)) {
+                seen.set(key, entity);
+            }
+        }
+        return Array.from(seen.values()).sort((a, b) => a.name.localeCompare(b.name, 'de'));
     }
 
     /**
@@ -260,6 +296,10 @@ const QZHParser = (function() {
                 return `<div class="${abClass}">${children}</div>`;
             
             case 'head':
+                const headType = node.getAttribute('type') || '';
+                if (headType === 'subtitle') {
+                    return `<h2 class="tei-head-subtitle">${children}</h2>`;
+                }
                 const level = getHeadingLevel(node);
                 return `<h${level} class="tei-head${level}">${children}</h${level}>`;
             
@@ -267,16 +307,17 @@ const QZHParser = (function() {
             case 'lb':
                 const breakAttr = node.getAttribute('break');
                 if (breakAttr === 'no') {
-                    return '<span class="tei-lb-break"></span><br>';
+                    // Hyphen at word break, continue on same line
+                    return '<span class="tei-lb-hyphen">-</span>';
                 }
-                return ' ';  // Simple space for line continuation
+                return '';  // No visible break - text flows continuously
             
             case 'pb':
                 const n = node.getAttribute('n') || '';
                 const facs = node.getAttribute('facs') || '';
-                const pbClass = n.match(/^\d+$/) ? 'pb-pagination' : 'pb-foliation';
+                const pageLabel = n ? `S. ${n}` : '';
                 const tooltip = facs ? `data-tooltip="Faksimile: ${facs}" data-tooltip-type="page"` : '';
-                return `<span class="${pbClass}" ${tooltip}>${n}</span>`;
+                return `<span class="pb-marker" ${tooltip}>[${pageLabel}]</span>`;
             
             case 'cb':
                 return '<span class="column-break"> | </span>';
@@ -536,6 +577,24 @@ const QZHParser = (function() {
     function transformSemanticElement(node, type, children) {
         const ref = node.getAttribute('ref') || '';
         const role = node.getAttribute('role') || '';
+        const name = node.textContent.trim();
+        
+        // Add to register
+        const entity = { name, ref, role };
+        switch (type) {
+            case 'person':
+                persons.push(entity);
+                break;
+            case 'place':
+                places.push(entity);
+                break;
+            case 'organization':
+                organizations.push(entity);
+                break;
+            case 'term':
+                terms.push(entity);
+                break;
+        }
         
         let tooltipParts = [];
         

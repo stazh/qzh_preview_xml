@@ -398,6 +398,20 @@ a:hover, a:active, a:focus {
     margin: 1em 0 0.5em;
 }
 
+.tei-head-subtitle {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 1.5em 0 0.75em;
+    padding-top: 1em;
+    border-top: 1px solid #e0e0e0;
+}
+
+.tei-head-subtitle:first-child {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
 .tei-head6, .tei-head8 {
     font-style: italic;
 }
@@ -671,6 +685,14 @@ a:hover, a:active, a:focus {
 /* --------------------------------------------------------------------------
    Page Break Indicator
    -------------------------------------------------------------------------- */
+.pb-marker {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: #555;
+    margin: 0 0.5em;
+    font-style: italic;
+}
+
 .pb-foliation, .pb-pagination {
     display: inline-block;
     font-size: 0.75rem;
@@ -695,7 +717,13 @@ a:hover, a:active, a:focus {
    Line Break
    -------------------------------------------------------------------------- */
 .tei-lb {
-    /* Normal line break - just a space in continuous text */
+    /* Text flows continuously */
+    display: inline;
+}
+
+.tei-lb-hyphen {
+    /* Hyphen at word break */
+    display: inline;
 }
 
 /* --------------------------------------------------------------------------
@@ -857,6 +885,45 @@ section, .tei-div {
 section:first-child, .tei-div:first-child {
     margin-top: 0;
     padding-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Register Sections
+   -------------------------------------------------------------------------- */
+.register-section {
+    margin-top: 1.5rem;
+}
+
+.register-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.register-item {
+    margin-bottom: 0.4rem;
+    padding: 0.2rem 0;
+    cursor: pointer;
+}
+
+.register-item:hover {
+    text-decoration: underline;
+}
+
+.register-item.place {
+    color: #055005;
+}
+
+.register-item.person {
+    color: #395576;
+}
+
+.register-item.organization {
+    color: #395576;
+}
+
+.register-item.term {
+    color: #740502;
 }
 
 /* --------------------------------------------------------------------------
