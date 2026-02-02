@@ -1,0 +1,1015 @@
+/* ==========================================================================
+   QZH XML Preview - Styles
+   Based on: https://github.com/stazh/qzh
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS Variables (from theme-qzh.css)
+   -------------------------------------------------------------------------- */
+:root {
+    --footer-height: 45px;
+    --toolbar-height: 50px;
+    --pb-box-shadow: 0px 0px 4px 0px #cdccce;
+    --pb-brand-color: #0076bd;
+    --pb-base-font-family: Georgia, "Times New Roman", serif;
+    --pb-content-font-family: Georgia, "Times New Roman", serif;
+    --pb-content-font-size: 1rem;
+    --pb-popover-font-size: 80%;
+    --pb-color-primary: #333333;
+    --pb-view-max-width: 900px;
+    --qzh-link-color: var(--pb-brand-color);
+    
+    /* Heading sizes */
+    --pb-h1-font-size: 1.8rem;
+    --pb-h2-font-size: 1.5rem;
+    --pb-h3-font-size: 1.3rem;
+    --pb-h4-font-size: 1.15rem;
+    --pb-h5-font-size: 1rem;
+}
+
+@media screen and (min-width: 769px) {
+    :root {
+        --pb-content-font-size: 1.1rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Reset & Base
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--pb-base-font-family);
+    font-size: var(--pb-content-font-size);
+    color: var(--pb-color-primary);
+    background: #f5f5f5;
+    line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   App Header
+   -------------------------------------------------------------------------- */
+.app-header {
+    background: var(--pb-brand-color);
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: var(--pb-box-shadow);
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.app-header .subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.app-header a {
+    color: white;
+    text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   App Main Layout
+   -------------------------------------------------------------------------- */
+.app-main {
+    min-height: calc(100vh - 80px);
+    padding: 1rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   Drop Zone
+   -------------------------------------------------------------------------- */
+.dropzone {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 3rem;
+    background: white;
+    border: 3px dashed #ccc;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.dropzone.dragover {
+    border-color: var(--pb-brand-color);
+    background: #f0f8ff;
+    transform: scale(1.02);
+}
+
+.dropzone-content {
+    pointer-events: none;
+}
+
+.dropzone.dragover .dropzone-content {
+    pointer-events: none;
+}
+
+.dropzone-icon {
+    width: 64px;
+    height: 64px;
+    color: #999;
+    margin-bottom: 1rem;
+}
+
+.dropzone.dragover .dropzone-icon {
+    color: var(--pb-brand-color);
+}
+
+.dropzone-text {
+    font-size: 1.3rem;
+    color: #666;
+    margin: 0 0 0.5rem;
+}
+
+.dropzone-subtext {
+    color: #999;
+    margin: 0.75rem 0;
+}
+
+.file-input-label {
+    pointer-events: auto;
+}
+
+.file-input-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--pb-brand-color);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+.file-input-button:hover {
+    background: #005a91;
+}
+
+/* --------------------------------------------------------------------------
+   Preview Container
+   -------------------------------------------------------------------------- */
+.preview {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: var(--pb-box-shadow);
+    overflow: hidden;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: #f8f8f8;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.toolbar-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #555;
+    transition: all 0.2s;
+}
+
+.toolbar-btn:hover {
+    background: var(--pb-brand-color);
+    color: white;
+    border-color: var(--pb-brand-color);
+}
+
+.toolbar-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.filename {
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   Document Container Layout
+   -------------------------------------------------------------------------- */
+.document-container {
+    display: flex;
+    min-height: calc(100vh - 200px);
+}
+
+.sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: #fafafa;
+    border-right: 1px solid #e0e0e0;
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+}
+
+.content-area {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+}
+
+@media screen and (max-width: 768px) {
+    .document-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .content-area {
+        max-height: none;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Metadata Sidebar (from qzh.css)
+   -------------------------------------------------------------------------- */
+.metadata {
+    font-size: 0.85rem;
+}
+
+.metadata-section {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.metadata-section:last-child {
+    border-bottom: none;
+}
+
+.metadata-section h4 {
+    margin: 0 0 0.5rem;
+    color: var(--pb-brand-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.metadata-section h4::before {
+    content: '▼';
+    font-size: 0.6rem;
+    transition: transform 0.2s;
+}
+
+.metadata-section.collapsed h4::before {
+    transform: rotate(-90deg);
+}
+
+.metadata-section.collapsed .metadata-content {
+    display: none;
+}
+
+.metadata-content {
+    padding-left: 1rem;
+}
+
+.metadata-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.metadata-content li {
+    margin-bottom: 0.3rem;
+}
+
+.metadata-label {
+    font-weight: 600;
+    color: #666;
+}
+
+/* --------------------------------------------------------------------------
+   Document Heading (from qzh.css)
+   -------------------------------------------------------------------------- */
+.document-heading {
+    padding: 0 0 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    font-family: var(--pb-content-font-family);
+}
+
+.document-heading h2 {
+    margin: 0 0 0.5rem;
+    font-size: var(--pb-h2-font-size);
+    font-weight: 700;
+    color: var(--pb-color-primary);
+}
+
+.document-heading .doc-date {
+    color: #666;
+    font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   Body Content (from qzh.css, qzh-odd.css)
+   -------------------------------------------------------------------------- */
+.body, .body > *, .footnotes .footnote {
+    font-family: var(--pb-content-font-family);
+    font-size: var(--pb-content-font-size);
+}
+
+.content {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--pb-content-font-family);
+    line-height: 1.3;
+    font-weight: 300;
+}
+
+h1, .body h1 { font-size: var(--pb-h1-font-size); }
+h2, .body h2 { font-size: var(--pb-h2-font-size); }
+h3, .body h3 { font-size: var(--pb-h3-font-size); }
+h4, .body h4 { font-size: var(--pb-h4-font-size); }
+h5, .body h5 { font-size: var(--pb-h5-font-size); }
+
+.body h1, .body h2, .body h3, .body h4 {
+    font-family: var(--pb-content-font-family);
+    font-weight: 700;
+}
+
+/* Links */
+a {
+    background-color: transparent;
+    text-decoration: none;
+    color: var(--qzh-link-color);
+}
+
+a:hover, a:active, a:focus {
+    color: #00558a;
+    text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   TEI Element Styles (from transform/qzh.css)
+   -------------------------------------------------------------------------- */
+.tei-p {
+    text-align: justify;
+    margin: 0 0 1em;
+}
+
+.tei-ab {
+    margin: 0 0 1em;
+}
+
+.tei-ab1 {
+    font-size: 15px;
+}
+
+.tei-head1, .tei-head2, .tei-head3, .tei-head4, .tei-head5 {
+    font-weight: bold;
+    margin: 1em 0 0.5em;
+}
+
+.tei-head6, .tei-head8 {
+    font-style: italic;
+}
+
+.tei-head9 {
+    font-weight: bold;
+}
+
+.tei-figure::before {
+    content: '[';
+}
+
+.tei-figure::after {
+    content: ']';
+}
+
+.tei-label1 {
+    font-size: 80%;
+}
+
+.tei-pb {
+    display: none;
+}
+
+.tei-hi1 {
+    font-size: 80%;
+    vertical-align: top;
+}
+
+.tei-code {
+    font-family: monospace;
+}
+
+.tei-trailer {
+    color: green;
+}
+
+.tei-speaker {
+    font-style: italic;
+}
+
+.tei-figDesc::before {
+    content: '[..';
+}
+
+.tei-figDesc::after {
+    content: '..]';
+}
+
+.tei-figDesc {
+    color: grey;
+    font-style: italic;
+}
+
+.tei-foreign, .tei-foreign1 {
+    font-style: italic;
+}
+
+.tei-email {
+    font-family: monospace;
+}
+
+.tei-floatingText {
+    margin: 6pt;
+    border: solid black 1pt;
+}
+
+.tei-table {
+    font-size: smaller;
+    background-color: #F0F0F0;
+}
+
+.tei-listBibl1 {
+    margin-top: 1em;
+}
+
+.tei-address {
+    margin: 2em;
+}
+
+.tei-castList {
+    list-style: ordered;
+}
+
+.tei-l {
+    margin-left: 1em;
+}
+
+.tei-closer {
+    margin-top: 1em;
+    margin-left: 1em;
+}
+
+.tei-docTitle {
+    font-size: larger;
+}
+
+.tei-lb-break::before {
+    content: '-';
+}
+
+.tei-lb-block {
+    display: block;
+}
+
+.tei-stage {
+    font-style: italic;
+}
+
+.tei-titlePage {
+    text-align: center;
+}
+
+.tei-edition::before {
+    content: 'Edition: ';
+}
+
+.tei-argument {
+    margin-bottom: 0.5em;
+}
+
+.tei-title5 {
+    font-style: italic;
+}
+
+.tei-gap5 {
+    color: grey;
+}
+
+.tei-gap::before {
+    content: '[...';
+}
+
+.tei-gap::after {
+    content: ']';
+}
+
+.tei-gap, .tei-gap6 {
+    color: grey;
+}
+
+.tei-row1 {
+    font-weight: bold;
+}
+
+.tei-persName1::before {
+    content: ', ';
+}
+
+/* --------------------------------------------------------------------------
+   Semantic Highlighting (from qzh.css)
+   -------------------------------------------------------------------------- */
+.semantic {
+    cursor: pointer;
+    border-bottom: 1px dotted currentColor;
+}
+
+.semantic:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.place, .semantic.place {
+    color: #055005;
+}
+
+.person, .semantic.person {
+    color: #395576;
+}
+
+.organization, .semantic.organization {
+    color: #395576;
+}
+
+.term, .semantic.term {
+    color: #740502;
+}
+
+/* --------------------------------------------------------------------------
+   Text-Critical Elements
+   -------------------------------------------------------------------------- */
+.text-critical {
+    color: #888888;
+    cursor: help;
+}
+
+.text-critical:hover {
+    background-color: rgba(136, 136, 136, 0.1);
+}
+
+/* Deleted text */
+.tei-del {
+    text-decoration: line-through;
+    color: #888888;
+}
+
+/* Added text */
+.tei-add {
+    color: #888888;
+}
+
+.tei-add::before {
+    content: '\\';
+}
+
+.tei-add::after {
+    content: '/';
+}
+
+/* Supplied text */
+.tei-supplied::before {
+    content: '[';
+}
+
+.tei-supplied::after {
+    content: ']';
+}
+
+/* Unclear text */
+.tei-unclear {
+    border-bottom: 1px dotted #888;
+}
+
+/* Sic */
+.tei-sic::after {
+    content: ' [sic]';
+    font-size: 0.8em;
+    color: #888;
+}
+
+/* Abbreviation */
+.tei-abbr {
+    border-bottom: 1px dotted #666;
+    cursor: help;
+}
+
+/* Original form */
+.tei-orig::before {
+    content: '«';
+}
+
+.tei-orig::after {
+    content: '»';
+}
+
+/* Quotes */
+.tei-q::before, .tei-quote::before {
+    content: '«';
+}
+
+.tei-q::after, .tei-quote::after {
+    content: '»';
+}
+
+/* Damage */
+.tei-damage {
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgba(136, 136, 136, 0.1) 2px,
+        rgba(136, 136, 136, 0.1) 4px
+    );
+}
+
+/* Space/gap indicator */
+.tei-space::before {
+    content: '...';
+    color: #888;
+}
+
+/* --------------------------------------------------------------------------
+   Page Break Indicator
+   -------------------------------------------------------------------------- */
+.pb-foliation, .pb-pagination {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: #888;
+    background: #f0f0f0;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    margin: 0 0.25rem;
+    vertical-align: middle;
+    cursor: default;
+}
+
+.pb-foliation::before {
+    content: '[';
+}
+
+.pb-foliation::after {
+    content: ']';
+}
+
+/* --------------------------------------------------------------------------
+   Line Break
+   -------------------------------------------------------------------------- */
+.tei-lb {
+    /* Normal line break - just a space in continuous text */
+}
+
+/* --------------------------------------------------------------------------
+   Footnotes (from qzh.css)
+   -------------------------------------------------------------------------- */
+.footnotes {
+    font-size: 80%;
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid #d6d7d9;
+}
+
+.footnotes .textcritical {
+    margin-bottom: 0.625em;
+}
+
+.footnote-ref {
+    font-size: 0.75em;
+    vertical-align: super;
+    color: var(--pb-brand-color);
+    cursor: pointer;
+    margin: 0 0.1em;
+}
+
+.footnote-ref:hover {
+    text-decoration: underline;
+}
+
+.footnote {
+    margin-bottom: 0.5em;
+}
+
+.footnote-number {
+    font-weight: bold;
+    margin-right: 0.5em;
+    color: var(--pb-brand-color);
+}
+
+/* --------------------------------------------------------------------------
+   Back Matter / Commentary
+   -------------------------------------------------------------------------- */
+.back {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #e0e0e0;
+}
+
+.back h3 {
+    margin: 0 0 1rem;
+    color: var(--pb-brand-color);
+}
+
+.back ol {
+    padding-left: 1.5rem;
+}
+
+.back ol li {
+    margin-bottom: 0.75rem;
+}
+
+.back p {
+    text-align: left;
+    margin: 0 0 1em;
+}
+
+/* --------------------------------------------------------------------------
+   Simple Rendition Classes (from transform/qzh.css)
+   -------------------------------------------------------------------------- */
+.simple_allcaps {
+    text-transform: uppercase;
+}
+
+.simple_bold {
+    font-weight: bold;
+}
+
+.simple_italic {
+    font-style: italic;
+}
+
+.simple_smallcaps {
+    font-variant: small-caps;
+}
+
+.simple_underline {
+    text-decoration: underline;
+}
+
+.simple_strikethrough {
+    text-decoration: line-through;
+}
+
+.simple_superscript {
+    vertical-align: super;
+    font-size: smaller;
+}
+
+.simple_subscript {
+    vertical-align: bottom;
+    font-size: smaller;
+}
+
+.simple_letterspace {
+    letter-spacing: 0.5em;
+}
+
+.simple_literal {
+    font-family: monospace;
+    white-space: pre;
+}
+
+.simple_larger {
+    font-size: larger;
+}
+
+.simple_smaller {
+    font-size: smaller;
+}
+
+.simple_centre, .simple_center {
+    text-align: center;
+}
+
+.simple_right {
+    text-align: right;
+}
+
+.simple_left {
+    text-align: left;
+}
+
+.simple_justify {
+    text-align: justify;
+}
+
+.simple_block {
+    display: block;
+}
+
+.simple_inline {
+    display: inline;
+}
+
+/* --------------------------------------------------------------------------
+   Highlight (Search Results)
+   -------------------------------------------------------------------------- */
+.highlight {
+    background-color: #FFEB3B;
+}
+
+/* --------------------------------------------------------------------------
+   Sections
+   -------------------------------------------------------------------------- */
+section, .tei-div {
+    margin: 0.75em 0;
+    padding-top: 0.25em;
+}
+
+section:first-child, .tei-div:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+.tei-table {
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+.tei-table th, .tei-table td {
+    border: 1px solid #ccc;
+    padding: 0.5em;
+}
+
+.tei-table th {
+    background: #f0f0f0;
+}
+
+/* --------------------------------------------------------------------------
+   Lists
+   -------------------------------------------------------------------------- */
+.tei-list {
+    margin: 1em 0;
+    padding-left: 1.5em;
+}
+
+.tei-item {
+    margin-bottom: 0.5em;
+}
+
+/* --------------------------------------------------------------------------
+   Tooltip (replaces pb-popover)
+   -------------------------------------------------------------------------- */
+.tooltip {
+    position: fixed;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tooltip-title {
+    font-weight: 600;
+    color: var(--pb-brand-color);
+    margin-bottom: 0.25rem;
+}
+
+.tooltip-type {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tooltip-content {
+    margin-top: 0.5rem;
+    color: #555;
+}
+
+/* Tooltip type-specific colors */
+.tooltip.person .tooltip-title {
+    color: #395576;
+}
+
+.tooltip.place .tooltip-title {
+    color: #055005;
+}
+
+.tooltip.term .tooltip-title {
+    color: #740502;
+}
+
+/* --------------------------------------------------------------------------
+   Modal (Error Dialog)
+   -------------------------------------------------------------------------- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 8px;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin: 0 0 1rem;
+    color: #c00;
+}
+
+.modal-content p {
+    margin: 0 0 1.5rem;
+    color: #555;
+}
+
+.modal-btn {
+    padding: 0.5rem 1.5rem;
+    background: var(--pb-brand-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.modal-btn:hover {
+    background: #005a91;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Adjustments
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 600px) {
+    .app-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .dropzone {
+        margin: 1rem;
+        padding: 2rem 1rem;
+    }
+    
+    .content-area {
+        padding: 1rem;
+    }
+    
+    .sidebar {
+        padding: 0.75rem;
+    }
+}

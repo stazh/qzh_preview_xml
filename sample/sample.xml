@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" n="1234" xml:lang="de">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <respStmt>
+                    <persName>Andrea Schmid-Kunz</persName>
+                    <resp key="transcript"/>
+                </respStmt>
+                <respStmt>
+                    <persName>Michael Schaffner</persName>
+                    <resp key="tagging"/>
+                </respStmt>
+            </titleStmt>
+            <publicationStmt>
+                <date type="electronic" when="2021-05-01"/>
+            </publicationStmt>
+            <seriesStmt xml:id="ssrq-sds-fds">
+                <title>Gelebte Reformation. Zürich 1500-1800</title>
+                <idno>QZH_SAMPLE</idno>
+            </seriesStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        <idno source="https://suche.staatsarchiv.djiktzh.ch/detail.aspx?ID=123456">StAZH A 27.1.1, Nr. 20</idno>
+                    </msIdentifier>
+                    <head>Kundschaften über gotteslästerliche Vorfälle</head>
+                    <msContents>
+                        <msItem>
+                            <textLang>Deutsch</textLang>
+                            <filiation type="current">Aufzeichnung (3 Doppelblätter)</filiation>
+                        </msItem>
+                    </msContents>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support><material>Papier</material></support>
+                            </supportDesc>
+                        </objectDesc>
+                    </physDesc>
+                    <history>
+                        <origin><origDate when="1518-09">September 1518</origDate></origin>
+                    </history>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <profileDesc>
+            <textClass>
+                <keywords scheme="http://www.ssrq-sds-fds.ch/taxonomie">
+                    <term ref="key000482">Blasphemie</term>
+                    <term ref="key004380">Fluchen/Schwören</term>
+                    <term ref="key000325">Wirtshausbesuch</term>
+                </keywords>
+            </textClass>
+        </profileDesc>
+    </teiHeader>
+    <text>
+        <group>
+            <text>
+                <body>
+                    <div>
+                        <pb n="1" facs="StAZH_A_27_1_1__Nr__20__S__1_.tif"/>
+                        <head>Erste Kundschaft</head>
+                        <p>
+                            <lb/><persName ref="PER_001">Hanns Pfister</persName> von 
+                            <placeName ref="LOC_47.25686_8.69893">Meilen</placeName>,
+                            <abbr>d</abbr>, wie das an <placeName ref="LOC_47.25686_8.69893">Meilener</placeName> Kilbi
+                            <lb/>sei gewesen <persName ref="PER_002">Ueli Imers</persName> Sohn in <persName ref="PER_003">Hans Zollingers</persName> Haus und
+                            <lb/>hat zu zwei Frauen gesprochen, er müsse sie <q>bruten</q>, also hat
+                            <lb/>sie ihn in die Stube geworfen. In dem hat einer unter
+                            <lb/>den Gesellen, die in der Stube waren, ein Becken mit Wasser
+                            <lb/>auf sie geschüttet. Da ist der <persName ref="PER_002">Imer</persName> aufgestanden und hat geschworen:
+                            <lb/><q>Gotts macht schend, dass euch Gotts Leiden schändet</q>, und der
+                            <lb/>Schwüre so viel getrieben, dass der Zeuge nicht sagen kann.
+                        </p>
+
+                        <pb n="2" facs="StAZH_A_27_1_1__Nr__20__S__2_.tif"/>
+                        <head>Zweite Kundschaft</head>
+                        <p>
+                            <lb/><persName ref="PER_004">Heinrich Müller</persName>, Bürger von <placeName ref="LOC_47.3769_8.5417">Zürich</placeName>, sagt aus,
+                            <lb/>dass er am <date when="1518-09-15">15. Tag des Herbstmonats</date> im 
+                            <lb/><term ref="key000325">Wirtshaus</term> zum <q>Goldenen Stern</q> gesessen
+                            <lb/>und dabei Zeuge folgender <term ref="key000482">gotteslästerlicher</term> Rede geworden sei:
+                        </p>
+                        <p>
+                            <lb/>Ein <choice><abbr>frömd</abbr><expan>fremder</expan></choice> Mann, dessen Namen er nicht kenne,
+                            <lb/>habe bei einem Würfelspiel <measure type="currency" unit="Pfund" quantity="3">3 Pfund</measure> verloren
+                            <lb/>und daraufhin geflucht: <q>Gotts Wunden und Marter!</q>
+                        </p>
+                        <p>
+                            <lb/>Der Wirt <persName ref="PER_005">Konrad Meier</persName> habe <unclear reason="Tintenfleck">den Mann</unclear> 
+                            <lb/>sogleich des Hauses verwiesen und <supplied source="editor">ihm</supplied> gesagt,
+                            <lb/>solches <term ref="key004380">Fluchen</term> werde in seinem Haus nicht geduldet.
+                            <gap reason="Papier beschädigt" unit="Zeilen" quantity="2"/>
+                        </p>
+
+                        <p>
+                            <lb/>Weiter berichtet der Zeuge, dass ein gewisser 
+                            <lb/><persName ref="PER_006"><choice><orig>Identity</orig><reg>Identität</reg></choice> unbekannt</persName>
+                            <lb/>am selben Abend <add place="margin">nach dem Essen</add> geschrien habe:
+                            <lb/><q>Potz <del rend="durchgestrichen">Himmel</del> Hölle!</q>
+                        </p>
+                        
+                        <pb n="3"/>
+                        <p>
+                            <lb/>Abschliessend sei zu bemerken, dass der <persName ref="PER_004">Müller</persName>
+                            <lb/>alle Aussagen <hi rend="italic">bei seinem Eid</hi> bestätigt hat
+                            <lb/>und <damage agent="Wasserschaden">bereit ist</damage>, vor dem <orgName ref="ORG_001">Rat der Stadt Zürich</orgName>
+                            <lb/>zu erscheinen.<note>Diese Notiz wurde vom Schreiber nachträglich hinzugefügt.</note>
+                        </p>
+                        
+                        <signed>
+                            <persName ref="PER_007">Johannes Stumpf</persName>, Stadtschreiber
+                        </signed>
+                    </div>
+                </body>
+                <back>
+                    <div>
+                        <p>Die insgesamt zwölf Kundschaften vermitteln einen Eindruck von 
+                        den gotteslästerlichen Redewendungen, die im geselligen Rahmen 
+                        eines Wirtshausbesuchs fallen konnten.</p>
+                        <p>Die Verwendung von <term ref="key004380">Flüchen</term> und 
+                        <term ref="key000482">blasphemischen Ausdrücken</term> war im 
+                        16. Jahrhundert ein ernstes Vergehen, das von den Obrigkeiten 
+                        streng geahndet wurde.</p>
+                        <p>Zur rechtlichen Einordnung siehe die Literatur bei 
+                        <bibl type="url">https://www.ssrq-sds-fds.ch</bibl>.</p>
+                    </div>
+                </back>
+            </text>
+        </group>
+    </text>
+</TEI>
