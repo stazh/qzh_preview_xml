@@ -115,6 +115,8 @@ const QZHParser = (function() {
             keywords: [],
             textLang: '',
             filiation: '',
+            filiationOriginal: '',
+            edition: '',
             material: '',
             dimensions: '',
             condition: '',
@@ -163,6 +165,44 @@ const QZHParser = (function() {
             metadata.filiation = filiation.textContent.trim();
         }
         
+        // Filiation original (for Edition display)
+        const filiationOriginal = header.querySelector('filiation[type="original"]');
+        if (filiationOriginal) {
+            // Check if it contains origDate
+            const origDateInFiliation = filiationOriginal.querySelector('origDate') || filiationOriginal.getElementsByTagNameNS(TEI_NS, 'origDate')[0];
+            if (origDateInFiliation) {
+                const dateFrom = origDateInFiliation.getAttribute('from');
+                const dateTo = origDateInFiliation.getAttribute('to');
+                const dateWhen = origDateInFiliation.getAttribute('when');
+                const dateText = origDateInFiliation.textContent.trim();
+                
+                if (dateText) {
+                    metadata.filiationOriginal = dateText;
+                } else if (dateWhen) {
+                    metadata.filiationOriginal = formatDate(dateWhen);
+                } else if (dateFrom && dateTo) {
+                    metadata.filiationOriginal = `${formatDate(dateFrom)} - ${formatDate(dateTo)}`;
+                } else if (dateFrom) {
+                    metadata.filiationOriginal = `ab ${formatDate(dateFrom)}`;
+                }
+            } else {
+                metadata.filiationOriginal = filiationOriginal.textContent.trim();
+            }
+        }
+        
+        // Edition from additional/listBibl
+        const listBibl = header.querySelector('additional listBibl');
+        if (listBibl) {
+            const bibl = listBibl.querySelector('bibl');
+            if (bibl) {
+                // Extract text content, preserving some structure
+                const editionText = bibl.textContent.trim();
+                if (editionText) {
+                    metadata.edition = editionText;
+                }
+            }
+        }
+        
         // Material
         const material = header.querySelector('material') || header.getElementsByTagNameNS(TEI_NS, 'material')[0];
         if (material) {
@@ -172,10 +212,15 @@ const QZHParser = (function() {
         // Dimensions
         const dimensions = header.querySelector('dimensions') || header.getElementsByTagNameNS(TEI_NS, 'dimensions')[0];
         if (dimensions) {
-            const width = dimensions.querySelector('width');
-            const height = dimensions.querySelector('height');
+            const width = dimensions.querySelector('width') || dimensions.getElementsByTagNameNS(TEI_NS, 'width')[0];
+            const height = dimensions.querySelector('height') || dimensions.getElementsByTagNameNS(TEI_NS, 'height')[0];
             if (width && height) {
-                metadata.dimensions = `${width.textContent} × ${height.textContent} cm`;
+                // Try to get quantity attribute first, then text content
+                const widthValue = width.getAttribute('quantity') || width.textContent.trim();
+                const heightValue = height.getAttribute('quantity') || height.textContent.trim();
+                if (widthValue && heightValue) {
+                    metadata.dimensions = `${widthValue} × ${heightValue} cm`;
+                }
             }
         }
         
