@@ -50,6 +50,7 @@ const QZHParser = (function() {
         
         const result = {
             metadata: extractMetadata(xmlDoc),
+            summary: extractSummary(xmlDoc),
             heading: extractHeading(xmlDoc),
             body: null,
             back: null,
@@ -204,6 +205,25 @@ const QZHParser = (function() {
         }
         
         return metadata;
+    }
+
+    /**
+     * Extract summary (Regest) from teiHeader
+     */
+    function extractSummary(xmlDoc) {
+        const header = xmlDoc.querySelector('teiHeader') || xmlDoc.getElementsByTagNameNS(TEI_NS, 'teiHeader')[0];
+        if (!header) return '';
+
+        const summary = header.querySelector('summary') || header.getElementsByTagNameNS(TEI_NS, 'summary')[0];
+        if (!summary) return '';
+
+        const summaryHtml = transformChildren(summary).trim();
+        if (summaryHtml) {
+            return summaryHtml;
+        }
+
+        const summaryText = summary.textContent.trim();
+        return summaryText ? escapeHTML(summaryText) : '';
     }
 
     /**

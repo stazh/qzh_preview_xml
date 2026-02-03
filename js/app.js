@@ -8,7 +8,7 @@ const QZHApp = (function() {
 
     // DOM Elements
     let dropzonePage, dropzone, preview, fileInput;
-    let metadataEl, bodyEl, backEl;
+    let metadataEl, bodyEl, backEl, regestEl;
     let docIdEl, docTitleEl, docDateEl;
     let registersEl;
     let errorModal, errorMessage, closeErrorBtn;
@@ -27,6 +27,7 @@ const QZHApp = (function() {
         metadataEl = document.getElementById('metadata');
         bodyEl = document.getElementById('documentBody');
         backEl = document.getElementById('documentBack');
+        regestEl = document.getElementById('documentRegest');
         docIdEl = document.getElementById('docId');
         docTitleEl = document.getElementById('docTitle');
         docDateEl = document.getElementById('docDate');
@@ -258,6 +259,13 @@ const QZHApp = (function() {
             backEl.innerHTML = result.back;
         } else {
             backEl.innerHTML = '<p class="no-content">Kein Kommentar vorhanden</p>';
+        }
+
+        // Render summary (Regest)
+        if (result.summary) {
+            regestEl.innerHTML = result.summary;
+        } else {
+            regestEl.innerHTML = '<p class="no-content">Kein Regest vorhanden</p>';
         }
         
         // Render registers in sidebar
