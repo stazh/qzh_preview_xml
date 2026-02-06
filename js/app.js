@@ -14,6 +14,11 @@ const QZHApp = (function() {
     let errorModal, errorMessage, closeErrorBtn;
     let newFileBtn;
     let tabs, tabContents;
+    let normalizedToggle;
+    
+    // Application state
+    let currentXmlDoc = null;
+    let currentFilename = null;
 
     /**
      * Initialize application
@@ -36,12 +41,14 @@ const QZHApp = (function() {
         errorMessage = document.getElementById('errorMessage');
         closeErrorBtn = document.getElementById('closeError');
         newFileBtn = document.getElementById('newFileBtn');
+        normalizedToggle = document.getElementById('normalizedToggle');
 
         // Set up event listeners
         setupDragDrop();
         setupFileInput();
         setupButtons();
         setupTabs();
+        setupNormalizedToggle();
     }
 
     /**
@@ -145,6 +152,21 @@ const QZHApp = (function() {
     }
 
     /**
+     * Setup normalized text toggle
+     */
+    function setupNormalizedToggle() {
+        if (normalizedToggle) {
+            normalizedToggle.addEventListener('change', function() {
+                if (currentXmlDoc) {
+                    // Re-transform and render with new normalized setting
+                    const result = QZHParser.transform(currentXmlDoc, this.checked);
+                    renderDocument(result, currentFilename);
+                }
+            });
+        }
+    }
+
+    /**
      * Prevent default behavior
      */
     function preventDefaults(e) {
@@ -215,8 +237,13 @@ const QZHApp = (function() {
             // Parse XML
             const xmlDoc = QZHParser.parse(xmlString);
             
-            // Transform to HTML
-            const result = QZHParser.transform(xmlDoc);
+            // Store for re-rendering when toggle changes
+            currentXmlDoc = xmlDoc;
+            currentFilename = filename;
+            
+            // Transform to HTML (check if normalized mode is enabled)
+            const normalized = normalizedToggle ? normalizedToggle.checked : false;
+            const result = QZHParser.transform(xmlDoc, normalized);
             
             // Render
             renderDocument(result, filename);

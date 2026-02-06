@@ -19,6 +19,9 @@ const QZHParser = (function() {
     let places = [];
     let organizations = [];
     let terms = [];
+    
+    // Normalized mode flag
+    let normalizedMode = false;
 
     /**
      * Parse XML string to DOM
@@ -39,7 +42,10 @@ const QZHParser = (function() {
     /**
      * Main transform function
      */
-    function transform(xmlDoc) {
+    function transform(xmlDoc, normalized = false) {
+        // Set normalized mode
+        normalizedMode = normalized;
+        
         // Reset footnotes and registers
         footnoteCounter = 0;
         footnotes = [];
@@ -370,6 +376,10 @@ const QZHParser = (function() {
             
             // Line/page breaks
             case 'lb':
+                if (normalizedMode) {
+                    // In normalized mode, completely omit line breaks
+                    return '';
+                }
                 const breakAttr = node.getAttribute('break');
                 if (breakAttr === 'no') {
                     // Hyphen at word break, continue on same line
