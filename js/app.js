@@ -400,6 +400,26 @@ const QZHApp = (function() {
             `;
         }
         
+        // Edition (from filiation type="original" or additional/listBibl)
+        if (meta.filiationOriginal || meta.edition) {
+            let editionText = '';
+            if (meta.filiationOriginal && meta.edition) {
+                // If we have both, show date from filiationOriginal and edition info
+                editionText = `${escapeHTML(meta.filiationOriginal)}. ${escapeHTML(meta.edition)}`;
+            } else if (meta.edition) {
+                editionText = escapeHTML(meta.edition);
+            } else {
+                editionText = escapeHTML(meta.filiationOriginal);
+            }
+            
+            html += `
+                <tr>
+                    <th>Edition</th>
+                    <td>${editionText}</td>
+                </tr>
+            `;
+        }
+        
         // Material
         if (meta.material) {
             html += `
@@ -426,6 +446,17 @@ const QZHApp = (function() {
                 <tr>
                     <th>Sprache</th>
                     <td>${escapeHTML(meta.textLang)}</td>
+                </tr>
+            `;
+        }
+        
+        // Siegel
+        if (meta.seals && meta.seals.length > 0) {
+            const sealsList = meta.seals.map(s => escapeHTML(s)).join('<br>');
+            html += `
+                <tr>
+                    <th>Siegel</th>
+                    <td>${sealsList}</td>
                 </tr>
             `;
         }
