@@ -20,7 +20,8 @@ const QZHParser = (function() {
     let organizations = [];
     let terms = [];
     
-    // Normalized mode flag
+    // Normalized mode flag - reset at the start of each transform() call
+    // Safe for single-document processing which is the use case here
     let normalizedMode = false;
 
     /**

@@ -16,9 +16,9 @@ const QZHApp = (function() {
     let tabs, tabContents;
     let normalizedToggle;
     
-    // Application state
-    let currentXmlDoc = null;
-    let currentFilename = null;
+    // Application state - cached for re-rendering when toggle changes
+    let cachedXmlDoc = null;
+    let cachedFilename = null;
 
     /**
      * Initialize application
@@ -157,10 +157,10 @@ const QZHApp = (function() {
     function setupNormalizedToggle() {
         if (normalizedToggle) {
             normalizedToggle.addEventListener('change', function() {
-                if (currentXmlDoc) {
+                if (cachedXmlDoc) {
                     // Re-transform and render with new normalized setting
-                    const result = QZHParser.transform(currentXmlDoc, this.checked);
-                    renderDocument(result, currentFilename);
+                    const result = QZHParser.transform(cachedXmlDoc, this.checked);
+                    renderDocument(result, cachedFilename);
                 }
             });
         }
@@ -237,9 +237,9 @@ const QZHApp = (function() {
             // Parse XML
             const xmlDoc = QZHParser.parse(xmlString);
             
-            // Store for re-rendering when toggle changes
-            currentXmlDoc = xmlDoc;
-            currentFilename = filename;
+            // Cache for re-rendering when toggle changes
+            cachedXmlDoc = xmlDoc;
+            cachedFilename = filename;
             
             // Transform to HTML (check if normalized mode is enabled)
             const normalized = normalizedToggle ? normalizedToggle.checked : false;
