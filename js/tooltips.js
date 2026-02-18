@@ -116,6 +116,8 @@ const QZHTooltips = (function() {
             'abbr': 'Abkürzung',
             'date': 'Datum',
             'time': 'Zeit',
+            'duration': 'Dauer',
+            'highlight': 'Hervorgehoben',
             'measure': 'Maßangabe',
             'num': 'Zahl',
             'note': 'Anmerkung',
