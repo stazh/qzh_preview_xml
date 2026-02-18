@@ -521,7 +521,7 @@ const QZHParser = (function() {
                     'type': 'Typ'
                 });
                 const hiClasses = hiTooltip ? `${hiClass} tei-hi-annotated` : hiClass;
-                const hiTooltipAttr = hiTooltip ? ` data-tooltip="${escapeAttr(hiTooltip)}" data-tooltip-type="textcritical"` : '';
+                const hiTooltipAttr = hiTooltip ? ` data-tooltip="${escapeAttr(hiTooltip)}" data-tooltip-type="highlight"` : '';
                 return `<span class="${hiClasses}"${hiTooltipAttr}>${children}</span>`;
             
             // Foreign language
@@ -561,7 +561,9 @@ const QZHParser = (function() {
             case 'date':
                 const dateInfo = buildDateTooltip(node);
                 if (dateInfo) {
-                    return `<span class="tei-date text-critical" data-tooltip="${escapeAttr(dateInfo)}" data-tooltip-type="date">${children}</span>`;
+                    const hasDuration = node.hasAttribute('dur-iso') || node.hasAttribute('dur');
+                    const tooltipType = hasDuration ? 'duration' : 'date';
+                    return `<span class="tei-date text-critical" data-tooltip="${escapeAttr(dateInfo)}" data-tooltip-type="${tooltipType}">${children}</span>`;
                 }
                 return `<span class="tei-date">${children}</span>`;
             
