@@ -364,8 +364,15 @@ const QZHParser = (function() {
             
             case 'ab':
                 const place = node.getAttribute('place');
+                const abType = (node.getAttribute('type') || '').toLowerCase();
                 const abClass = place ? 'tei-ab tei-ab1' : 'tei-ab';
-                return `<div class="${abClass}">${children}</div>`;
+                let abPrefix = '';
+                if (abType === 'dorsal') {
+                    const dorsalN = node.getAttribute('n') || '';
+                    const dorsalLabel = dorsalN ? `S. ${dorsalN}` : 'verso';
+                    abPrefix = `<span class="pb-marker tei-ab-dorsal-marker" data-tooltip="Verso-Angabe" data-tooltip-type="page">[${escapeHTML(dorsalLabel)}]</span> `;
+                }
+                return `<div class="${abClass}">${abPrefix}${children}</div>`;
             
             case 'head':
                 const headType = node.getAttribute('type') || '';
@@ -508,7 +515,14 @@ const QZHParser = (function() {
             case 'hi':
                 const rend = node.getAttribute('rend') || '';
                 const hiClass = getRenditionClass(rend);
-                return `<span class="${hiClass}">${children}</span>`;
+                const hiTooltip = buildAttributeTooltip(node, {
+                    'rend': 'Darstellung',
+                    'hand': 'Hand',
+                    'type': 'Typ'
+                });
+                const hiClasses = hiTooltip ? `${hiClass} tei-hi-annotated` : hiClass;
+                const hiTooltipAttr = hiTooltip ? ` data-tooltip="${escapeAttr(hiTooltip)}" data-tooltip-type="highlight"` : '';
+                return `<span class="${hiClasses}"${hiTooltipAttr}>${children}</span>`;
             
             // Foreign language
             case 'foreign':
@@ -545,12 +559,11 @@ const QZHParser = (function() {
             
             // Date/Time
             case 'date':
-                const dateWhen = node.getAttribute('when') || '';
-                const dateCalendar = node.getAttribute('calendar') || '';
-                let dateInfo = dateWhen ? formatDate(dateWhen) : '';
-                if (dateCalendar) dateInfo += ` (${dateCalendar})`;
+                const dateInfo = buildDateTooltip(node);
                 if (dateInfo) {
-                    return `<span class="tei-date text-critical" data-tooltip="${escapeAttr(dateInfo)}" data-tooltip-type="date">${children}</span>`;
+                    const hasDuration = node.hasAttribute('dur-iso') || node.hasAttribute('dur');
+                    const tooltipType = hasDuration ? 'duration' : 'date';
+                    return `<span class="tei-date text-critical" data-tooltip="${escapeAttr(dateInfo)}" data-tooltip-type="${tooltipType}">${children}</span>`;
                 }
                 return `<span class="tei-date">${children}</span>`;
             
@@ -623,6 +636,11 @@ const QZHParser = (function() {
             
             // Segments
             case 'seg':
+                if (normalizedMode) {
+                    const segN = node.getAttribute('n') || '';
+                    const segLabel = segN ? `<span class="tei-seg-label">[${escapeHTML(segN)}]</span> ` : '';
+                    return `<span class="tei-seg tei-seg-normalized">${segLabel}${children}</span>`;
+                }
                 return `<span class="tei-seg">${children}</span>`;
             
             // Handshift
@@ -839,6 +857,8 @@ const QZHParser = (function() {
      * Get CSS class for @rend attribute
      */
     function getRenditionClass(rend) {
+        if (!rend) return 'tei-hi';
+
         const rendMap = {
             'sup': 'simple_superscript',
             'super': 'simple_superscript',
@@ -852,16 +872,166 @@ const QZHParser = (function() {
             'strikethrough': 'simple_strikethrough',
             'smallcaps': 'simple_smallcaps',
             'small-caps': 'simple_smallcaps',
+            'allcaps': 'simple_allcaps',
             'uppercase': 'simple_allcaps',
             'larger': 'simple_larger',
             'smaller': 'simple_smaller',
+            'letter-space': 'simple_letterspace',
+            'letterspace': 'simple_letterspace',
+            'letterspacing': 'simple_letterspace',
+            'spaced': 'simple_letterspace',
+            'gesperrt': 'simple_letterspace',
+            'sperrung': 'simple_letterspace',
             'center': 'simple_centre',
             'centre': 'simple_centre',
             'right': 'simple_right',
             'left': 'simple_left'
         };
-        
-        return rendMap[rend.toLowerCase()] || 'tei-hi';
+
+        const tokens = rend
+            .toLowerCase()
+            .split(/\s+/)
+            .map(t => t.trim())
+            .filter(Boolean);
+
+        const classes = [];
+        for (const token of tokens) {
+            if (token.startsWith('simple:')) {
+                classes.push(`simple_${token.substring(7).replace(/[^a-z0-9_-]/g, '')}`);
+                continue;
+            }
+            if (token.startsWith('simple_')) {
+                classes.push(token);
+                continue;
+            }
+            if (token.startsWith('simple-')) {
+                classes.push(token.replace(/^simple-/, 'simple_'));
+                continue;
+            }
+
+            const normalized = token.replace(/_/g, '-');
+            const compact = normalized.replace(/-/g, '');
+            const mapped = rendMap[normalized] || rendMap[compact];
+            if (mapped) {
+                classes.push(mapped);
+            }
+        }
+
+        if (classes.length === 0) {
+            return 'tei-hi';
+        }
+
+        return Array.from(new Set(classes)).join(' ');
+    }
+
+    /**
+     * Build tooltip text from element attributes
+     */
+    function buildAttributeTooltip(node, labelMap = {}) {
+        if (!node?.attributes || node.attributes.length === 0) {
+            return '';
+        }
+
+        let parts = [];
+        for (const attr of node.attributes) {
+            if (!attr.value) continue;
+            const label = labelMap[attr.name] || attr.name;
+            parts.push(`${label}: ${attr.value}`);
+        }
+
+        return parts.join(' | ');
+    }
+
+    /**
+     * Build date tooltip with relevant TEI date attributes
+     */
+    function buildDateTooltip(node) {
+        const when = node.getAttribute('when') || '';
+        const from = node.getAttribute('from') || '';
+        const to = node.getAttribute('to') || '';
+        const notBefore = node.getAttribute('notBefore') || '';
+        const notAfter = node.getAttribute('notAfter') || '';
+        const calendar = node.getAttribute('calendar') || '';
+        const type = node.getAttribute('type') || '';
+        const period = node.getAttribute('period') || '';
+        const durIso = node.getAttribute('dur-iso') || node.getAttribute('dur') || '';
+
+        let parts = [];
+
+        if (when) {
+            parts.push(formatDate(when));
+        } else if (from && to) {
+            parts.push(`${formatDate(from)} - ${formatDate(to)}`);
+        } else if (from) {
+            parts.push(`ab ${formatDate(from)}`);
+        } else if (to) {
+            parts.push(`bis ${formatDate(to)}`);
+        } else if (notBefore && notAfter) {
+            parts.push(`zwischen ${formatDate(notBefore)} und ${formatDate(notAfter)}`);
+        } else if (notBefore) {
+            parts.push(`nicht vor ${formatDate(notBefore)}`);
+        } else if (notAfter) {
+            parts.push(`nicht nach ${formatDate(notAfter)}`);
+        }
+
+        if (calendar) {
+            parts.push(`Kalender: ${calendar}`);
+        }
+
+        if (type) {
+            parts.push(`Typ: ${type}`);
+        }
+
+        if (period) {
+            parts.push(`Periode: ${period}`);
+        }
+
+        if (durIso) {
+            parts.push(`Dauer: ${formatIsoDuration(durIso)}`);
+        }
+
+        return parts.join(' | ');
+    }
+
+    /**
+     * Format ISO 8601 duration for tooltip display
+     */
+    function formatIsoDuration(duration) {
+        if (!duration) return '';
+
+        const repeatMatch = duration.match(/^R(\d*)\/(.+)$/);
+        if (repeatMatch) {
+            const repeatCount = repeatMatch[1];
+            const repeated = formatIsoDuration(repeatMatch[2]);
+            if (repeatCount) {
+                return `${repeatCount}× wiederholt (${repeated})`;
+            }
+            return `wiederholt (${repeated})`;
+        }
+
+        const match = duration.match(/^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/i);
+        if (!match) {
+            return duration;
+        }
+
+        const years = parseInt(match[1] || '0', 10);
+        const months = parseInt(match[2] || '0', 10);
+        const weeks = parseInt(match[3] || '0', 10);
+        const days = parseInt(match[4] || '0', 10);
+        const hours = parseInt(match[5] || '0', 10);
+        const minutes = parseInt(match[6] || '0', 10);
+        const seconds = parseInt(match[7] || '0', 10);
+
+        let parts = [];
+        if (years) parts.push(`${years} Jahr${years === 1 ? '' : 'e'}`);
+        if (months) parts.push(`${months} Monat${months === 1 ? '' : 'e'}`);
+        if (weeks) parts.push(`${weeks} Woche${weeks === 1 ? '' : 'n'}`);
+        if (days) parts.push(`${days} Tag${days === 1 ? '' : 'e'}`);
+        if (hours) parts.push(`${hours} Stunde${hours === 1 ? '' : 'n'}`);
+        if (minutes) parts.push(`${minutes} Minute${minutes === 1 ? '' : 'n'}`);
+        if (seconds) parts.push(`${seconds} Sekunde${seconds === 1 ? '' : 'n'}`);
+
+        return parts.length ? parts.join(' ') : duration;
     }
 
     /**
@@ -908,7 +1078,7 @@ const QZHParser = (function() {
      * Escape for use in attributes
      */
     function escapeAttr(text) {
-        return text
+        return String(text || '')
             .replace(/&/g, '&amp;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;')

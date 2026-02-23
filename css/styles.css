@@ -584,8 +584,22 @@ a:hover, a:active, a:focus {
     margin: 0 0 1em;
 }
 
+.tei-seg-normalized {
+    display: block;
+    margin-top: 0.75em;
+}
+
+.tei-seg-label {
+    color: #666;
+    font-size: 0.9em;
+}
+
 .tei-ab {
     margin: 0 0 1em;
+}
+
+.tei-ab-dorsal-marker {
+    margin-right: 0.35em;
 }
 
 .tei-ab1 {
@@ -638,6 +652,11 @@ a:hover, a:active, a:focus {
 .tei-hi1 {
     font-size: 80%;
     vertical-align: top;
+}
+
+.tei-hi-annotated {
+    cursor: help;
+    border-bottom: 1px dotted #888;
 }
 
 .tei-code {
