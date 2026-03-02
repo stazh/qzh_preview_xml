@@ -364,14 +364,8 @@ const QZHParser = (function() {
             
             case 'ab':
                 const place = node.getAttribute('place');
-                const abType = (node.getAttribute('type') || '').toLowerCase();
                 const abClass = place ? 'tei-ab tei-ab1' : 'tei-ab';
-                let abPrefix = '';
-                if (abType === 'dorsal') {
-                    const dorsalN = node.getAttribute('n') || '';
-                    const dorsalLabel = dorsalN ? `S. ${dorsalN}` : 'verso';
-                    abPrefix = `<span class="pb-marker tei-ab-dorsal-marker" data-tooltip="Verso-Angabe" data-tooltip-type="page">[${escapeHTML(dorsalLabel)}]</span> `;
-                }
+                const abPrefix = buildAbMarker(node);
                 return `<div class="${abClass}">${abPrefix}${children}</div>`;
             
             case 'head':
@@ -940,6 +934,45 @@ const QZHParser = (function() {
         }
 
         return parts.join(' | ');
+    }
+
+    /**
+     * Build a marker-like prefix for <ab> based on key attributes
+     */
+    function buildAbMarker(node) {
+        const relevantAttrs = ['type', 'place', 'n'];
+        const attrs = relevantAttrs
+            .map(name => [name, node.getAttribute(name) || ''])
+            .filter(([, value]) => Boolean(value));
+
+        if (attrs.length === 0) {
+            return '';
+        }
+
+        const fullLabel = attrs
+            .map(([name, value]) => `${name}=${value}`)
+            .join(', ');
+
+        let inlineAttrs = attrs;
+        if (fullLabel.length > 40) {
+            inlineAttrs = attrs.filter(([name]) => name === 'type' || name === 'place');
+            if (inlineAttrs.length === 0) {
+                inlineAttrs = [attrs[0]];
+            }
+        }
+
+        const inlineLabel = inlineAttrs
+            .map(([name, value]) => `${name}=${value}`)
+            .join(', ');
+
+        const tooltipText = buildAttributeTooltip(node, {
+            type: 'type',
+            place: 'place',
+            n: 'n'
+        });
+        const tooltip = tooltipText ? ` data-tooltip="${escapeAttr(tooltipText)}" data-tooltip-type="page"` : '';
+
+        return `<span class="pb-marker tei-ab-marker"${tooltip}>[${escapeHTML(inlineLabel)}]</span> `;
     }
 
     /**
